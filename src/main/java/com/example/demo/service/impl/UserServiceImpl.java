@@ -30,9 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-
         List<Address> addresses = user.getAddresses();
-
         for (Address address : addresses) {
             addressService.save(address);
         }
@@ -53,13 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, UserRequest userRequest) {
-
         User user = findById(id);
-
         User updatedUser = userConverter.update(user, userRequest);
-
         userRepository.save(updatedUser);
-
         return updatedUser;
     }
 

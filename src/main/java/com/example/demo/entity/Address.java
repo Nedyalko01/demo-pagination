@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "addresses")
 public class Address {
@@ -23,12 +25,6 @@ public class Address {
     private Integer streetNumber;
 
 
-
-    //   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //   private User addressOwner;
-
-
-
     public Address() {
     }
 
@@ -36,7 +32,6 @@ public class Address {
         this.id = id;
         this.city = city;
         this.street = street;
-
 
     }
 

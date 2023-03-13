@@ -2,8 +2,8 @@
 //
 //import com.example.demo.entity.Address;
 //import com.example.demo.entity.User;
-//import com.example.demo.service.AddressServiceImpl;
-//import com.example.demo.service.UserServiceImpl;
+//import com.example.demo.service.impl.AddressServiceImpl;
+//import com.example.demo.service.impl.UserServiceImpl;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.CommandLineRunner;
 //import org.springframework.stereotype.Component;

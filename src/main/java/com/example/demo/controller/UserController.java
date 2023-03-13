@@ -4,7 +4,8 @@ import com.example.demo.converter.UserConverter;
 import com.example.demo.dto.UserRequest;
 import com.example.demo.dto.UserResponse;
 import com.example.demo.entity.User;
-import com.example.demo.service.UserServiceImpl;
+import com.example.demo.service.impl.UserServiceImpl;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -29,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponse> save(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> saveUser(@RequestBody @NotNull UserRequest userRequest) {
 
         User user = userConverter.convertToUser(userRequest);
 
@@ -41,19 +43,19 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponse>> findAll() {
+    public ResponseEntity<List<UserResponse>> getAll() {
 
-        List<UserResponse> users = userServiceImpl.findAll()
+        List<UserResponse> users = userServiceImpl.getAll()
                 .stream()
                 .map(userConverter::convertUserToResponse)
-                .toList();
+                .collect(Collectors.toList());
 
         return new ResponseEntity<>(users, HttpStatus.OK);
 
     }
 
     @PatchMapping(value = "/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> updateUser(@RequestBody @NotNull UserRequest userRequest, @PathVariable Long id) {
 
         User user = userServiceImpl.updateUser(id, userRequest);
 
@@ -64,9 +66,13 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<UserResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
 
         User user = userServiceImpl.findById(id);
+
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
 
         UserResponse response = userConverter.convertUserToResponse(user);
 
@@ -74,17 +80,14 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<User> deleteById(@PathVariable Long id) {
-        try {
-            userServiceImpl.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException("User not found");
-        }
+    public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
+        userServiceImpl.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/sort")
-    public Page<User> findAllSorted(@RequestParam int page, @RequestParam int size) {
+
+    @GetMapping(value = "/sort-one")
+    public Page<User> getAllUsersSorted(@RequestParam int page, @RequestParam int size) {
 
         PageRequest pageRequest = PageRequest.of(page, size);
 
@@ -92,8 +95,8 @@ public class UserController {
 
     }
 
-    @GetMapping(value = "/sorted")
-    public Page<User> sortedUser(@RequestParam Optional<Integer> page, @RequestParam Optional<String> sortBy) {
+    @GetMapping(value = "/sort-two")
+    public Page<User> getAllUsersSortedById(@RequestParam Optional<Integer> page, @RequestParam Optional<String> sortBy) {
 
         Page<User> sorted = userServiceImpl.findAll(PageRequest.of(page.orElse(0), 5, Sort.Direction.ASC, sortBy.orElse("id")));
 

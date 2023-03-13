@@ -1,12 +1,11 @@
 package com.example.demo.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "users")
@@ -30,13 +29,8 @@ public class User {
             name = "users_addresses",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "address_id")})
-
     private List<Address> addresses;
 
-
-    //   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    //   @JoinColumn(name = "address_id", referencedColumnName = "id")
-    //   private List<Address> addresses;
 
     public User() {
     }

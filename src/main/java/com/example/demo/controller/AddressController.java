@@ -2,8 +2,7 @@ package com.example.demo.controller;
 
 
 import com.example.demo.entity.Address;
-import com.example.demo.entity.User;
-import com.example.demo.service.AddressServiceImpl;
+import com.example.demo.service.impl.AddressServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +23,9 @@ public class AddressController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Address>> findAll() {
+    public ResponseEntity<List<Address>> getAll() {
 
-        List<Address> addressesResponses = new ArrayList<>(addressServiceImpl.findAll());
+        List<Address> addressesResponses = new ArrayList<>(addressServiceImpl.getAll());
 
         return new ResponseEntity<>(addressesResponses, HttpStatus.OK);
 

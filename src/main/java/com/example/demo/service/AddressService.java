@@ -8,5 +8,5 @@ public interface AddressService {
 
     Address save (Address address);
 
-    List<Address> findAll();
+    List<Address> getAll();
 }

@@ -12,7 +12,7 @@ public interface UserService {
 
   User save (User user);
 
-  List<User> findAll();
+  List<User> getAll();
 
   User findById(Long id);
 

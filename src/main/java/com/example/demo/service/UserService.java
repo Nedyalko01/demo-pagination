@@ -12,11 +12,13 @@ public interface UserService {
 
   User save (User user);
 
+  User register(UserRequest userRequest);
+
   List<User> getAll();
 
   User findById(Long id);
 
-  User updateUser(Long id, UserRequest userRequest);
+  User updateUser(UserRequest userRequest, Long id);
 
   void deleteById(Long id);
 

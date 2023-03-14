@@ -2,8 +2,8 @@ package com.example.demo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
-import java.util.Set;
 
 @Entity
 @Table(name = "addresses")
@@ -16,9 +16,11 @@ public class Address {
     private Long id;
 
     @Column(name = "city", nullable = false, length = 50)
+    @NotBlank(message = "Every user must have a City name")
     private String city;
 
-    @Column(name = "street", nullable = false, length = 50, unique = true)
+    @Column(name = "street", nullable = false, length = 50)
+    @NotBlank(message = "Every user must have a Street name")
     private String street;
 
     @Column(name = "number", nullable = false, length = 50)
@@ -28,12 +30,13 @@ public class Address {
     public Address() {
     }
 
-    public Address(Long id, String city, String street, Integer number) {
+    public Address(Long id, String city, String street, Integer streetNumber) {
         this.id = id;
         this.city = city;
         this.street = street;
-
+        this.streetNumber = streetNumber;
     }
+
 
     public Long getId() {
         return id;

@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
@@ -18,10 +19,12 @@ public class User {
 
     @Column(name = "name", nullable = false)
     @Size(min = 2, max = 70)
+    @NotBlank(message = "Every user must have a name")
     private String name;
 
     @Column(name = "email", nullable = false, unique = true)
     @Size(min = 5, max = 30)
+    @NotBlank(message = "Every user must have a email@")
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL)
@@ -29,7 +32,8 @@ public class User {
             name = "users_addresses",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "address_id")})
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
+
 
 
     public User() {

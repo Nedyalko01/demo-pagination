@@ -4,11 +4,13 @@ import com.example.demo.converter.UserConverter;
 import com.example.demo.dto.UserRequest;
 import com.example.demo.entity.Address;
 import com.example.demo.entity.User;
+import com.example.demo.exception.DuplicateRecordException;
 import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.AddressService;
 import com.example.demo.service.UserService;
 import jakarta.annotation.PostConstruct;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,11 +32,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        List<Address> addresses = user.getAddresses();
-        for (Address address : addresses) {
-            addressService.save(address);
+        try {
+            List<Address> addresses = user.getAddresses();
+            for (Address address : addresses) {
+                addressService.save(address);
+            }
+            return userRepository.save(user);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DuplicateRecordException(
+                    String.format("User: %s already exists.", user.getName()));
         }
-        return userRepository.save(user);
+    }
+
+    @Override
+    public User register(UserRequest userRequest) {
+        User registeredUser = userConverter.convertToUser(userRequest);
+        userRepository.save(registeredUser);
+        return registeredUser;
     }
 
     @Override
@@ -50,16 +64,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long id, UserRequest userRequest) {
+    public User updateUser(UserRequest userRequest, Long id) {
         User user = findById(id);
-        User updatedUser = userConverter.update(user, userRequest);
+        User updatedUser = userConverter.update(userRequest, user);
         userRepository.save(updatedUser);
         return updatedUser;
     }
 
+
     @Override
     public void deleteById(Long id) {
-        userRepository.deleteById(id);
+        Long found = findById(id).getId();
+        userRepository.deleteById(found);
     }
 
     @Override
@@ -84,5 +100,5 @@ public class UserServiceImpl implements UserService {
 //        address.setUser(user);
 //
 //        addressServiceImpl.save(address);
-    }
+}
 

@@ -24,9 +24,7 @@ public class AddressController {
 
     @GetMapping
     public ResponseEntity<List<Address>> getAll() {
-
         List<Address> addressesResponses = new ArrayList<>(addressServiceImpl.getAll());
-
         return new ResponseEntity<>(addressesResponses, HttpStatus.OK);
 
     }

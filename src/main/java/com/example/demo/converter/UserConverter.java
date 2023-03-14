@@ -42,7 +42,7 @@ public class UserConverter {
         return addresses;
     }
 
-    public User update(User user, UserRequest userRequest) {
+    public User update(UserRequest userRequest, User user) {
 
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());

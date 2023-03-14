@@ -50,7 +50,7 @@ public class UserController {
 
     @PatchMapping(value = "/{id}")
     public ResponseEntity<UserResponse> updateUser(@RequestBody @NotNull UserRequest userRequest, @PathVariable Long id) {
-        User user = userServiceImpl.updateUser(id, userRequest);
+        User user = userServiceImpl.updateUser(userRequest, id);
         UserResponse response = userConverter.convertUserToResponse(user);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
@@ -59,9 +59,6 @@ public class UserController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         User user = userServiceImpl.findById(id);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
         UserResponse response = userConverter.convertUserToResponse(user);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -69,9 +66,9 @@ public class UserController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
         userServiceImpl.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+    }
 
     @GetMapping(value = "/sort-one")
     public Page<User> getAllUsersSorted(@RequestParam int page, @RequestParam int size) {
